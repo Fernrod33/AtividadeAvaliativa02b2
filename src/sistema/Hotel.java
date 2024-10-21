@@ -1,5 +1,6 @@
 package sistema;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import objetos.ListaHospedes;
@@ -27,71 +28,81 @@ public class Hotel {
 		boolean continuar = true;
 		while(continuar ) {
 			exibirMenuPrincipal();
-			int escolha = scan.nextInt();
-			switch(escolha) {
-				case 1: {
-					exibirMenuHospedes();
-					escolha = scan.nextInt();
-					if(escolha == 1) {
-						novaListaHospedes.adicionarHospede();
+			try {
+				int escolha = scan.nextInt();
+				scan.nextLine();
+				switch(escolha) {
+					case 1: {
+						exibirMenuHospedes();
+						escolha = scan.nextInt();
+						scan.nextLine();
+						if(escolha == 1) {
+							novaListaHospedes.adicionarHospede();
+							break;
+						} else if(escolha == 2)	{
+							novaListaHospedes.removerHospede();
+							break;
+						} else if(escolha == 3) {
+							novaListaHospedes.listarHospedes();
+							break;
+						} else {
+							System.out.println("Escolha incorreta.");
+							break;
+						}
+					}
+					case 2: {
+						exibirMenuQuartos();
+						escolha = scan.nextInt();
+						scan.nextLine();
+						if(escolha == 1) {
+							novaListaQuartos.adicionarQuarto();
+							break;
+						} else if(escolha == 2) {
+							novaListaQuartos.removerQuarto();
+							break;
+						} else if(escolha == 3) {
+							novaListaQuartos.listarQuartos();
+							break;
+						}	else {
+							System.out.println("Escolha incorreta.");
+							break;
+						}
+					}
+					case 3: {
+						exibirMenuReservas();
+						escolha = scan.nextInt();
+						scan.nextLine();
+						if(escolha == 1) {
+							novaListaReservas.adicionarReserva();
+							break;
+						} else if(escolha == 2) {
+							novaListaReservas.removerReserva();
+							break;
+						} else if(escolha == 3) {
+							novaListaReservas.buscarReserva();
+							break;
+						} else if(escolha == 4) {
+							novaListaReservas.checkOut();
+							break;
+						} else {
+							System.out.println("Escolha incorreta.");
+							break;
+						}
+					}
+					case 4: {
+						continuar = false;
+						System.out.println("Saindo do sistema...");
 						break;
-					} else if(escolha == 2)	{
-						novaListaHospedes.removerHospede();
-						break;
-					} else if(escolha == 3) {
-						novaListaHospedes.listarHospedes();
-						break;
-					} else {
-						System.out.println("Escolha incorreta.");
+					}
+					default: {
+						System.out.println("Opcao incorreta, tente novamente.");
 						break;
 					}
 				}
-				case 2: {
-					exibirMenuQuartos();
-					escolha = scan.nextInt();
-					if(escolha == 1) {
-						novaListaQuartos.adicionarQuarto();
-						break;
-					} else if(escolha == 2) {
-						novaListaQuartos.removerQuarto();
-						break;
-					} else if(escolha == 3) {
-						novaListaQuartos.listarQuartos();
-						break;
-					}	else {
-						System.out.println("Escolha incorreta.");
-						break;
-					}
-				}
-				case 3: {
-					exibirMenuReservas();
-					escolha = scan.nextInt();
-					if(escolha == 1) {
-						novaListaReservas.adicionarReserva();
-						break;
-					} else if(escolha == 2) {
-						novaListaReservas.removerReserva();
-						break;
-					} else if(escolha == 3) {
-						novaListaReservas.buscarReserva();
-						break;
-					} else if(escolha == 4) {
-						novaListaReservas.checkOut();
-						break;
-					} else {
-						System.out.println("Escolha incorreta.");
-						break;
-					}
-				}
-				case 4: {
-					continuar = false;
-					break;
-				}
-				default: {
-					System.out.println("Opcao incorreta, tente novamente.");
-					break;
-				}
-			}
+			} catch (InputMismatchException e) {
+	            System.out.println("Entrada invalida, insira um numero.");
+	            scan.nextLine();
+	        }
 		}
 	}
 	

@@ -21,7 +21,7 @@ public class Reservas {
 	public Reservas(Hospedes hospede, LocalDate dataReserva, List<Quartos> quartos, int tempo, double valor, LocalDate dataSaida, boolean ativo) {
 		this.hospede = hospede;
 		this.dataReserva = dataReserva;
-		this.quartos = new ArrayList<>();
+		this.quartos = quartos != null ? quartos : new ArrayList<>();
 		this.tempo = tempo;
 		this.valor = valor;
 		this.dataSaida = dataSaida;

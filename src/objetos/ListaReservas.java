@@ -2,6 +2,7 @@ package objetos;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,21 +26,23 @@ public class ListaReservas {
 		}
 		System.out.println("Digite a data da reserva (dd/mm/aaaa):");
 		String stringData = scan.next();
-		LocalDate data = LocalDate.parse(stringData, formato);
-		LocalDate dataSaida = data;
-		boolean ativo = true;
-		Reservas reserva = new Reservas(hospede, data, null, 0, 0, dataSaida, ativo);
-		listaReservas.add(reserva);
+		LocalDate data;
+	    try {
+	        data = LocalDate.parse(stringData, formato);
+	    } catch (DateTimeParseException e) {
+	        System.out.println("Data invalida, use o formato correto (dd/mm/aaaa).");
+	        return;
+	    }
+		List<Quartos> quartos = new ArrayList<>();
 		System.out.println("Digite o tempo da estadia:");
-		reserva.setTempo(scan.nextInt());
-		reserva.setDataSaida(data.plusDays(reserva.getTempo()));
+		int tempo = scan.nextInt();
+		double valor = 0;
 		boolean selecionarQuarto = true;
 		while(selecionarQuarto) {
 			System.out.println("Digite o numero do quarto (digite '0' para encerrar):");
 			int buscaQuarto = scan.nextInt();
 			if(buscaQuarto == 0) {
 				selecionarQuarto = false;
-				break;
 			} else {
 				Quartos quarto = ListaQuartos.buscarQuarto(buscaQuarto);
 				if(quarto == null) {
@@ -48,15 +51,42 @@ public class ListaReservas {
 					System.out.println("Quarto indisponivel!");
 				} else {
 					quarto.setDisponibilidade(false);
-					reserva.adicionarQuarto(quarto);
-					reserva.setValor(reserva.getValor() + (quarto.getPreco() * reserva.getTempo()));
+					quartos.add(quarto);
+					valor += quarto.getPreco() * tempo;
 				}
 			}
 		}
-		
+		if (quartos.isEmpty()) {
+	        System.out.println("Nenhum quarto foi selecionado. Reserva nao realizada.");
+	        return;
+	    }
+		LocalDate dataSaida = data.plusDays(tempo);
+		boolean ativo = true;
+		Reservas reserva = new Reservas(hospede, data, quartos, tempo, valor, dataSaida, ativo);
+		listaReservas.add(reserva);
 		System.out.println("Reserva cadastrada com sucesso!\n");
 		return;
 	}
+	
+//	boolean selecionarQuarto = true;
+//	while(selecionarQuarto) {
+//		System.out.println("Digite o numero do quarto (digite '0' para encerrar):");
+//		int buscaQuarto = scan.nextInt();
+//		if(buscaQuarto == 0) {
+//			selecionarQuarto = false;
+//		} else {
+//			Quartos quarto = ListaQuartos.buscarQuarto(buscaQuarto);
+//			if(quarto == null) {
+//				System.out.println("Quarto nao localizado.");
+//			} else if(!quarto.isDisponibilidade()) {
+//				System.out.println("Quarto indisponivel!");
+//			} else {
+//				quarto.setDisponibilidade(false);
+//				reserva.adicionarQuarto(quarto);
+//				reserva.setValor(reserva.getValor() + (quarto.getPreco() * reserva.getTempo()));
+//			}
+//		}
+//	}
 	
 	public void checkOut() {
 		if (listaReservas.isEmpty()) {
